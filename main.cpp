@@ -36,49 +36,23 @@ class Solution {
   ListNode *addTwoNumbers(ListNode *a, ListNode *b) {
     bool carry = false;
     int value = 0;
-    ListNode result{-1};
+    ListNode before_head{-1};
     ListNode *last = nullptr;
-    while (a and b) {
-      tie(carry, value) = add(a->val, b->val, carry);
+    while (a || b || carry) {
+      int aval = a ? a->val : 0;
+      int bval = b ? b->val : 0;
+      tie(carry, value) = add(aval, bval, carry);
       ListNode* l = new ListNode{value};
       if (last) {
         last->next = l;
       }
       last = l;
-      if (not result.next) { result.next = l; }
-      a = a->next;
-      b = b->next;
-    }
-    while (a) {
-      tie(carry, value) = add(a->val, 0, carry);
-      ListNode* l = new ListNode{value};
-      if (last) {
-        last->next = l;
-      }
-      last = l;
-      if (not result.next) { result.next = l; }
-      a = a->next;
-    }
-    while (b) {
-      tie(carry, value) = add(0, b->val, carry);
-      ListNode* l = new ListNode{value};
-      if (last) {
-        last->next = l;
-      }
-      last = l;
-      if (not result.next) { result.next = l; }
-      b = b->next;
-    }
-    if (carry) {
-      ListNode* l = new ListNode{1};
-      if (last) {
-        last->next = l;
-      }
-      last = l;
-      if (not result.next) { result.next = l; }
+      if (not before_head.next) { before_head.next = l; }
+      a = a ? a->next : nullptr;
+      b = b ? b->next : nullptr;
     }
 
-    return result.next;
+    return before_head.next;
   }
  private:
   pair<bool, int> add(int a, int b, int carry) {
